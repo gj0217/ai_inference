@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>机载智能计算框架支持组件</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            height: calc(100vh - 40px); /* 减去body的padding */
+        }
+
+        .left-panel, .right-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .left-panel {
+            flex: 0 0 300px;
+        }
+
+        .center-panel, .right-panel {
+            flex: 1;
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: auto;
+            min-height: 0;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        button {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #40a9ff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .empty-content {
+            color: #999;
+            font-size: 14px;
+            padding: 20px;
+        }
+
+        .form-section {
+            border: 1px solid #d0d5ff;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-section-title {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+            min-width: 250px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .config-item {
+            width: 100%;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 12px;
+        }
+        .logo {
+            height: 40px;
+            width: auto;
+        }
+        .result-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: auto;
+            padding: 10px;
+            margin: 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background: #f5f5f5;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .model-display {
+            border: 1px solid #e0e0e0;
+            min-height: 200px;
+            height: 300px; /* 固定高度 */
+            padding: 10px;
+            background-color: #fafafa;
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+        .model-display:hover {
+            border-color: #1976d2;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .button-group button {
+            flex: 1;
+            max-width: 200px;
+        }
+        .button-group button:first-child {
+            margin-left: 0;
+        }
+        .button-group button:last-child {
+            margin-right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">机载智能计算框架支持组件</h1>
+        <img src="logo.png" alt="Logo" class="logo">
+    </div>
+    <div class="container">
+        <div class="left-panel">
+            <div class="form-section">
+                <div class="form-section-title">机载AI芯片类型：</div>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="chipType" value="atlas" checked>
+                        昇腾Ascend310B
+                    </label>
+                    <label>
+                        <input type="radio" name="chipType" value="rk3588">
+                        瑞星微RK3588
+                    </label>
+                </div>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="chipType" value="zk100">
+                        天数智铠100
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title">智能计算框架依赖和逻辑列表：</div>
+                <div class="panel-content" style="height: 300px; margin-bottom: 20px;">
+                    <div id="dependency-list" class="empty-content"></div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button onclick="dependencyVerify()">依赖校验</button>
+                <button onclick="dependencyLoad()">依赖装载</button>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <h2>校验结果显示：</h2>
+            <div class="panel-content">
+                <div id="verify-result" class="empty-content"></div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <h2>装载结果显示：</h2>
+            <div class="panel-content">
+                <div id="load-result" class="empty-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateDependencyList() {
+            const chipType = document.querySelector('input[name="chipType"]:checked').value;
+            const filePath = `/home/lenovo/proj/demo/demo_data/page3/${chipType}_pk_list.txt`;
+            
+            fetch(filePath)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('dependency-list').textContent = data;
+                })
+                .catch(error => {
+                    console.error('Error loading dependency list:', error);
+                    document.getElementById('dependency-list').textContent = '无法加载依赖列表';
+                });
+        }
+
+        // 监听芯片类型选择变化
+        document.querySelectorAll('input[name="chipType"]').forEach(radio => {
+            radio.addEventListener('change', updateDependencyList);
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
