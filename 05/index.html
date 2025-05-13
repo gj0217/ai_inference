@@ -340,31 +340,38 @@
     <div class="flex space-x-4">
         <!-- 左侧输入列 -->
         <div class="w-1/3 rounded-xl shadow-sm bg-white p-4 rounded space-y-4">
-            <label class="form-control w-full left-panel">
-                <div class="label"><span class="label-text font-bold">加载AI芯片数量：</span></div>
-                <input type="range" min="1" max="3" value="1" class="range range-primary" />
-            </label>
-            <!-- 芯片选择 -->
-            <div class="space-y-2 left-panel">
-                <div class="flex items-center space-x-2">
-                    <select class="basis-1/2 select border-blue-200">
-                        <option disabled selected>1. AI芯片选择</option>
-                    </select>
-                    <input class="basis-1/2 input" type="text" placeholder="设置比例" />
-                </div>
-                <div class="flex items-center space-x-2">
-                    <select class="basis-1/2 select border-blue-200">
-                        <option disabled selected>2. AI芯片选择</option>
-                    </select>
-                    <input class="basis-1/2 input" type="text" placeholder="设置比例" />
-                </div>
-                <div class="flex items-center space-x-2">
-                    <select class="basis-1/2 select border-blue-200">
-                        <option disabled selected>3. AI芯片选择</option>
-                    </select>
-                    <input class="basis-1/2 input" type="text" placeholder="设置比例" />
-                </div>
+            <div>
+                <label class="font-medium">机载AI芯片数量：</label>
+                <input id="chipCount" type="range" min="1" max="3" step="1" value="1" class="range range-primary range-sm mt-1" />
+                <div class="flex justify-between text-xs px-1">
+                <span>1</span><span>2</span><span>3</span>
             </div>
+        </div>
+        
+        <!-- 芯片选择 -->
+        <div class="space-y-2 left-panel">
+            <div class="flex items-center space-x-2">
+                <select class="basis-1/2 select border-blue-200">
+                    <option disabled selected>1. AI芯片选择</option>
+                    <option>昇腾Ascend310B</option>
+                    <option>瑞星微RK3588</option>
+                    <option>天数智铠100</option>
+                </select>
+                <input class="basis-1/2 input" type="text" placeholder="设置比例" />
+            </div>
+            <div class="flex items-center space-x-2">
+                <select class="basis-1/2 select border-blue-200">
+                    <option disabled selected>2. AI芯片选择</option>
+                </select>
+                <input class="basis-1/2 input" type="text" placeholder="设置比例" />
+            </div>
+            <div class="flex items-center space-x-2">
+                <select class="basis-1/2 select border-blue-200">
+                    <option disabled selected>3. AI芯片选择</option>
+                </select>
+                <input class="basis-1/2 input" type="text" placeholder="设置比例" />
+            </div>
+        </div>
 
             <!-- 各类路径 -->
             <div class="left-panel">
@@ -438,8 +445,18 @@
             </div>
             <div class="card border bg-base-100">
                 <div class="card-body p-2">
-                <p class="font-bold">机载AI芯片平台运行结果显示：</p>
-                <div class="bg-gray-100 h-20"></div>
+                    <p class="font-bold">机载AI芯片平台运行结果显示：</p>
+                    <div class="tabs tabs-box">
+                        <input type="radio" name="my_tabs_5" class="tab" aria-label="芯片1" checked="checked" />
+                        <div class="tab-content bg-base-100 w-full bg-gray-100 h-20">芯片1</div>
+
+                        <input type="radio" name="my_tabs_5" class="tab" aria-label="芯片2" />
+                        <div class="tab-content bg-base-100 w-full bg-gray-100 h-20">芯片2</div>
+
+                        <input type="radio" name="my_tabs_5" class="tab" aria-label="芯片3" />
+                        <div class="tab-content bg-base-100 w-full bg-gray-100 h-20">芯片3</div>
+
+                    </div>
                 </div>
             </div>
             <div class="card border bg-base-100">
@@ -455,19 +472,24 @@
             <div class="tabs tabs-box">
                 <input type="radio" name="my_tabs_6" class="tab" aria-label="芯片1" checked="checked" />
                 <div class="tab-content bg-base-100 w-full">
-                    <div class="w-full">
-                        <div class="border bg-base-100 h-[400px] p-2" style="margin-bottom: 10px;">
-                            <p class="font-bold">模型显示</p>
-                            <div class="bg-gray-100 h-full mt-1"></div>
-                        </div>
+                    <div class="border bg-base-100 rounded-xl  p-2">
+                        <div class="bg-gray-100 h-[400px] mt-1">芯片1</div>
                     </div>
                 </div>
 
                 <input type="radio" name="my_tabs_6" class="tab" aria-label="芯片2" />
-                <div class="tab-content bg-base-100 border-base-300 p-6">Tab content 2</div>
+                <div class="tab-content bg-base-100 w-full">
+                    <div class="border bg-base-100 rounded-xl  p-2">
+                        <div class="bg-gray-100 h-[400px] mt-1">芯片2</div>
+                    </div>
+                </div>
 
                 <input type="radio" name="my_tabs_6" class="tab" aria-label="芯片3" />
-                <div class="tab-content bg-base-100 border-base-300 p-6">Tab content 3</div>
+                <div class="tab-content bg-base-100 w-full">
+                    <div class="border bg-base-100 rounded-xl  p-2">
+                        <div class="bg-gray-100 h-[400px] mt-1">芯片3</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -496,6 +518,71 @@
             document.querySelectorAll('[role="tab"]').forEach(tab => tab.classList.remove('tab-active'));
             event.target.classList.add('tab-active');
         }
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chipCountSlider = document.getElementById("chipCount");
+        const chipCountLabel = document.getElementById("chipCountLabel");
+        const chipRows = [
+          document.getElementById("chipRow1"),
+          document.getElementById("chipRow2"),
+          document.getElementById("chipRow3"),
+        ];
+        const chipSelects = chipRows.map(row => row.querySelector("select"));
+        const chipRatios = chipRows.map(row => row.querySelector("input"));
+
+        const updateUI = () => {
+          const count = parseInt(chipCountSlider.value);
+          chipCountLabel.textContent = count;
+
+          chipRows.forEach((row, i) => {
+            const enabled = i < count;
+            row.classList.toggle("opacity-100", enabled);
+            row.classList.toggle("opacity-50", !enabled);
+            row.querySelectorAll("select, input").forEach(el => {
+              el.disabled = !enabled;
+            });
+          });
+
+          // 自动补齐比例为100
+          const activeRatios = chipRatios.slice(0, count);
+          const activeValues = activeRatios.map(r => parseInt(r.value || "0"));
+          if (activeValues.length === 2) {
+            const sum = activeValues[0];
+            activeRatios[1].value = 100 - sum;
+          }
+          if (activeValues.length === 3) {
+            const sum = activeValues[0] + activeValues[1];
+            activeRatios[2].value = Math.max(0, 100 - sum);
+          }
+
+          // 更新选项卡状态
+          for (let i = 1; i <= 3; i++) {
+            const tabBtn = document.getElementById(`tab-chip${i}`);
+            tabBtn.classList.toggle("tab-disabled", i > count);
+          }
+        };
+
+        chipCountSlider.addEventListener("input", updateUI);
+        chipRatios.forEach(input => {
+          input.addEventListener("input", updateUI);
+        });
+
+        // 标签页切换
+        const tabs = document.querySelectorAll(".tab");
+        const panes = document.querySelectorAll(".tab-pane");
+        tabs.forEach((tab, idx) => {
+          tab.addEventListener("click", () => {
+            if (tab.classList.contains("tab-disabled")) return;
+            tabs.forEach(t => t.classList.remove("tab-active"));
+            panes.forEach(p => p.classList.add("hidden"));
+            tab.classList.add("tab-active");
+            panes[idx].classList.remove("hidden");
+          });
+        });
+
+        updateUI();
+      });
     </script>
     <script src="script.js"></script>
 </body>
