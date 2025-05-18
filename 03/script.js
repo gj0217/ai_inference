@@ -10,6 +10,15 @@ const selectedFiles = {
     type: "atlas",
 };
 
+// 监听芯片类型变化
+const chipTypeRadios = document.querySelectorAll('input[name="chipType"]');
+chipTypeRadios.forEach(radio => {
+    radio.addEventListener('change', (e) => {
+        selectedFiles.type = e.target.value;
+        resetDisplay();
+    });
+});
+
 
 // 重置显示内容
 function resetDisplay() {
@@ -40,6 +49,22 @@ frameworkRadios.forEach(radio => {
 
 window.dependencyVerify = async function() {
     console.log('dependencyVerify');
+    // 显示正在启动服务的提示
+    verifyResult.innerHTML = `
+    <div style="padding: 20px; text-align: center;">
+        <h3>正在启动服务...</h3>
+        <p>请稍候，这可能需要几秒钟时间</p>
+        <div style="margin-top: 20px; display: flex; justify-content: center;">
+            <div style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        </div>
+        <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+    </div>
+`;
     try {
         const config1 = {
             task_type : "init",
@@ -104,6 +129,22 @@ window.dependencyVerify = async function() {
 
 window.dependencyLoad = async function() {
     console.log('dependencyLoad');
+    // 显示正在启动服务的提示
+    loadResult.innerHTML = `
+    <div style="padding: 20px; text-align: center;">
+        <h3>正在启动服务...</h3>
+        <p>请稍候，这可能需要几秒钟时间</p>
+        <div style="margin-top: 20px; display: flex; justify-content: center;">
+            <div style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        </div>
+        <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+    </div>
+`;
     try {
         const config1 = {
             task_type : "load",

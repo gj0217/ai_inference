@@ -1,0 +1,11 @@
+{
+  "task_type": "convert",
+  "device": "rk3588",
+  "log": "/home/lenovo/proj/demo/log.txt",
+  "model_path": "/Users/ericcao/Documents/清华电子院/sys1_1/node_modules/.store/electron@28.3.3/node_modules/electron/LICENSE",
+  "result_dir_path": "/Users/ericcao/Documents/清华电子院/sys1_1/node_modules/.store/electron@28.3.3/node_modules/electron",
+  "netron_display": 1,
+  "port": 8082,
+  "timeout": 20,
+  "optimization_level": "1"
+}

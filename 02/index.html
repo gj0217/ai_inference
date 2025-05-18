@@ -36,6 +36,7 @@
         .center-panel, .right-panel {
             flex: 1;
             overflow: hidden; /* 防止内容溢出 */
+            min-width: 410px;
         }
 
         .panel-content {
@@ -259,6 +260,9 @@
             background: white;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             border-radius: 12px;
+            width: calc(300px + 450px + 450px + 40px); /* left + center + right + gaps */
+            margin-left: auto;
+            margin-right: auto;
         }
         .logo {
             height: 40px;
@@ -373,4 +377,4 @@
 
     <script src="script.js"></script>
 </body>
-</html> 
+</html>

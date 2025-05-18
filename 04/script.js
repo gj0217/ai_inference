@@ -1,10 +1,9 @@
 
 
 // 获取DOM元素
-const frameworkRadios = document.querySelectorAll('input[name="framework"]');
 const modelDisplay = document.getElementById('model-display');
-const modelPathInput = document.getElementById('modelPath');
-const exportPathInput = document.getElementById('exportPath');
+const modelPathInput = document.getElementById('model_path');
+const exportPathInput = document.getElementById('export_path');
 const dataDisplay = document.getElementById('dataDisplay');
 const compareDisplay = document.getElementById('compareDisplay');
 const AIDisplay = document.getElementById('AIDisplay');
@@ -29,6 +28,7 @@ const chipRadios = document.querySelectorAll('input[name="chipType"]');
 chipRadios.forEach(radio => {
     radio.addEventListener('change', (e) => {
         selectedFiles.chipset = e.target.value;  // 将选择的芯片类型存入chipset字段
+        resetDisplay();  // 重置显示内容
     });
 });
 
@@ -36,6 +36,15 @@ chipRadios.forEach(radio => {
 function resetDisplay() {
     modelPathInput.value = '';
     exportPathInput.value = '';
+    
+    // 重置center-panel中的元素
+    document.getElementById('dataDisplay').innerHTML = '';
+    document.getElementById('highResultDisplay').innerHTML = '';
+    document.getElementById('AIDisplay').innerHTML = '';
+    document.getElementById('compareDisplay').innerHTML = '';
+    
+    // 重置right-panel中的元素
+    document.getElementById('model-display').innerHTML = '';
 }
 
 // 显示错误信息
@@ -44,14 +53,6 @@ function showError(message) {
     logOutput.textContent = message;
     logOutput.classList.add('empty-content');
 }
-
-// 监听框架类型变化
-frameworkRadios.forEach(radio => {
-    radio.addEventListener('change', (e) => {
-        selectedFiles.chipset = e.target.value;
-        resetDisplay();
-    });
-});
 
 // 修改文件选择函数
 window.selectFile = async function(type) {

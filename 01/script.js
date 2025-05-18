@@ -62,6 +62,8 @@ function resetDisplay() {
     modelDisplay.textContent = '点击"模型解析"按钮查看模型结构图';
     logOutput.classList.add('empty-content');
     logOutput.textContent = '点击"模型解析"按钮查看日志输出';
+    selectedFiles.opset_version == 14;
+    selectedFiles.export_param == true;
 }
 
 // 显示错误信息
@@ -105,6 +107,7 @@ frameworkRadios.forEach(radio => {
         const selectedFramework = e.target.value;
         const defaultShape = frameworkInputShapes[selectedFramework];
         inputShapeSelect.value = defaultShape;
+        exportParamSelect.value = 'true';
         updateOperatorVersions(selectedFramework);
         resetDisplay();
         
@@ -208,7 +211,6 @@ window.parseModelFunction = async function() {
         // 保存配置文件
         const savedPath = await window.parent.electron.saveJson(config, `${randomId}.json`);
         console.log('配置文件已保存到:', savedPath);
-
         // 显示正在启动服务的提示
         modelDisplay.innerHTML = `
             <div style="padding: 20px; text-align: center;">
@@ -225,22 +227,30 @@ window.parseModelFunction = async function() {
                 </style>
             </div>
         `;
+        let port = 3031;
+        let isPortAvailable = false;
+        while (!isPortAvailable && port < 3100) {
+            isPortAvailable = await checkPortAvailability(port);
+            if (!isPortAvailable) {
+                console.log(`端口 ${port} 被占用，尝试下一个端口`);
+                port++;
+            }
+        }
 
+        if (!isPortAvailable) {
+            throw new Error('没有找到可用端口(3031-3100)');
+        }
         // 执行命令行命令
-        const command = `python /home/lenovo/桌面/proj/backend/main.py -c ./configs/${randomId}.json -i ${randomId} -p 3031`;
+        const command = `conda run -n env python /home/lenovo/桌面/proj/backend/main.py -c ./configs/${randomId}.json -i ${randomId} -p ${port}`;
         console.log('执行命令:', command);
-        
         // 执行命令并等待结果
         const result = await window.parent.electron.executeCommand(command);
         console.log('命令执行结果:', result);
-        
         if (result.error) {
             throw new Error(`Python 服务启动失败: ${result.error}`);
         }
-        // 等待5s
-        await new Promise(resolve => setTimeout(resolve, 5000));
         // 等待并检查服务是否可用
-        const isServiceAvailable = await checkServiceAvailability('http://localhost:3031');
+        const isServiceAvailable = await checkServiceAvailability(`http://localhost:${port}`);
         if (!isServiceAvailable) {
             throw new Error('服务启动失败，请检查 Python 服务是否正常运行');
         }
@@ -248,20 +258,19 @@ window.parseModelFunction = async function() {
         modelDisplay.innerHTML = `
             <div style="position: relative;">
                 <iframe 
-                    src="http://localhost:3031" 
+                    src="http://localhost:${port}" 
                     style="width: 100%; height: 600px; border: none;"
                     title="Model Visualization"
                     sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
                 ></iframe>
                 <button 
                     style="position: absolute; top: 10px; right: 10px; padding: 5px 5px; background-color: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer;"
-                    onclick="window.open('http://localhost:3031', '_blank', 'width=1200,height=800')"
+                    onclick="window.open('http://localhost:${port}', '_blank', 'width=1200,height=800')"
                 >全屏查看</button>
             </div>
         `;
         
-        // 设置10分钟内定期获取日志
-        const endTime = Date.now() + 10 * 60 * 1000; // 10分钟
+        const endTime = Date.now() + 0.3 * 60 * 1000;
         const fetchLog = async () => {
             if (Date.now() > endTime) return;
             
@@ -308,7 +317,7 @@ function getRandomId() {
 }
 
 // 检查服务是否可用的函数
-async function checkServiceAvailability(url, maxAttempts = 10, interval = 1000) {
+async function checkServiceAvailability(url, maxAttempts = 20, interval = 1000) {
     for (let i = 0; i < maxAttempts; i++) {
         try {
             const response = await fetch(url);
@@ -321,4 +330,14 @@ async function checkServiceAvailability(url, maxAttempts = 10, interval = 1000) 
         }
     }
     return false;
+}
+
+// 检查端口是否可用
+async function checkPortAvailability(port) {
+    try {
+        const response = await fetch(`http://localhost:${port}`, { method: 'HEAD' });
+        return false; // 如果能连接，说明端口被占用
+    } catch (error) {
+        return true; // 连接失败说明端口可用
+    }
 }

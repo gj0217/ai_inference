@@ -75,12 +75,18 @@ chipRadios.forEach(radio => {
 renderChipConfigArea();
 
 // 重置显示内容
+let fetchLogTimer = null; // 用于存储定时器引用
+
 function resetDisplay() {
+    // 清除现有的定时器
+    if (fetchLogTimer) {
+        clearTimeout(fetchLogTimer);
+        fetchLogTimer = null;
+    }
+    
     modelDisplay.innerHTML = '<div class="empty-content">点击"模型解析"按钮查看模型结构图</div>';
     logOutput.textContent = '点击"模型解析"按钮查看日志输出';
     logOutput.classList.add('empty-content');
-    modelPathInput.value = '';
-    exportPathInput.value = '';
 }
 
 // 显示错误信息
@@ -128,6 +134,7 @@ window.selectFolder = async function() {
 
 window.deployModel = async function() {
     console.log('deployModel');
+    resetDisplay(); // 先停止之前的日志获取
     try {
         const config1 = {
             task_type : "convert",
@@ -235,7 +242,7 @@ window.deployModel = async function() {
                 console.error('获取日志失败:', error);
             }
             
-            setTimeout(fetchLog, 5000); // 每5秒获取一次
+            fetchLogTimer = setTimeout(fetchLog, 5000); // 存储定时器引用
         };
         
         fetchLog(); // 开始获取日志
