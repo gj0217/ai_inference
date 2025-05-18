@@ -83,8 +83,8 @@ function resetDisplay() {
         clearTimeout(fetchLogTimer);
         fetchLogTimer = null;
     }
-    
-    modelDisplay.innerHTML = '<div class="empty-content">点击"模型解析"按钮查看模型结构图</div>';
+    modelDisplay.textContent = '点击"模型解析"按钮查看模型结构图';
+    modelDisplay.classList.add('empty-content');
     logOutput.textContent = '点击"模型解析"按钮查看日志输出';
     logOutput.classList.add('empty-content');
 }

@@ -179,7 +179,7 @@ window.serverInference = async function() {
         console.log('配置文件已保存到:', savedPath);
 
         // 执行命令行命令
-        const command = `python /home/lenovo/桌面/proj/backend/main.py -c ./configs/${randomId}.json -i ${randomId} -p 8080`;
+        const command = `conda run -n env python /home/lenovo/桌面/proj/backend/main.py -c ./configs/${randomId}.json -i ${randomId} -p 8080`;
         console.log('执行命令:', command);
         await window.parent.electron.executeCommand(command);
         // sleep 5s
@@ -230,7 +230,7 @@ window.deviceInference = async function() {
         await window.parent.electron.saveJson(config, `${randomId}.json`);
         console.log('配置文件已更新');
         // 执行命令行命令
-        const command = `python3 /home/lenovo/proj/demo/python_scripts/run_tasks.py --json ./configs/${randomId}.json --mapping`;
+        const command = `conda run -n base python3 /home/lenovo/proj/demo/python_scripts/run_tasks.py --json ./configs/${randomId}.json --mapping`;
         console.log('执行命令:', command);
         await window.parent.electron.executeCommand(command);
 

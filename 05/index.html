@@ -422,10 +422,10 @@
 
             <!-- 操作按钮组 -->
             <div class="grid grid-cols-2 gap-2 mt-2">
-                <button class="btn btn-sm btn-info font-normal text-white">模型分配</button>
-                <button class="btn btn-sm btn-info font-normal text-white">地面高性能平台推理</button>
-                <button class="btn btn-sm btn-info font-normal text-white">机载AI芯片平台推理</button>
-                <button class="btn btn-sm btn-info font-normal text-white">数据验证</button>
+                <button class="btn btn-sm btn-info font-normal text-white" onclick="model_split()">模型分配</button>
+                <button class="btn btn-sm btn-info font-normal text-white" onclick="ai_infer_ground()">地面高性能平台推理</button>
+                <button class="btn btn-sm btn-info font-normal text-white" onclick="ai_infer_aircraft()">机载AI芯片平台推理</button>
+                <button class="btn btn-sm btn-info font-normal text-white" onclick="data_verification()">数据验证</button>
             </div>
         </div>
 

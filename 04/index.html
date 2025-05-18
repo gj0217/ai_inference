@@ -106,48 +106,6 @@
             min-width: 40px;
         }
 
-        #logOutput, #modelDisplay {
-            width: 100%;
-            height: 100%;
-            border: 1px solid #eee;
-            border-radius: 4px;
-            padding: 10px;
-            box-sizing: border-box;
-            font-family: monospace;
-            white-space: pre-wrap;
-            background-color: #fafafa;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 600px;
-            position: relative;
-        }
-
-        .close {
-            position: absolute;
-            right: 20px;
-            top: 10px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-        }
-
         .empty-content {
             color: #999;
             font-size: 14px;
@@ -273,7 +231,7 @@
             height: 40px;
             width: auto;
         }
-        #logOutput, #modelDisplay {
+        #dataDisplay, #model-display, #compareDisplay, #AIDisplay,#highResultDisplay  {
             width: 100%;
             height: 100%;
             border: 1px solid #eee;
@@ -339,11 +297,11 @@
                 <div class="radio-group">
                     <label>
                         <input type="radio" name="chipType" value="rk3588">
-                        瑞星微RK3588
+                        瑞芯微RK3588
                     </label>
                     <label>
                         <input type="radio" name="chipType" value="zhikai100">
-                        天数智铠100
+                        登临UL64
                     </label>
                 </div>
                 <div class="radio-group" style="margin-top: 0;">
