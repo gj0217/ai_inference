@@ -19,9 +19,20 @@ chipTypeRadios.forEach(radio => {
     });
 });
 
+ // 在文件顶部添加全局变量
+ let fetchLogTimer = null;
+ 
+ function clearTimer() {
+    // 清除现有的定时器
+    if (fetchLogTimer) {
+        clearTimeout(fetchLogTimer);
+        fetchLogTimer = null;
+    }
+}
 
 // 重置显示内容
 function resetDisplay() {
+    clearTimer();
     verifyResult.textContent = '查看日志输出';
     verifyResult.classList.add('empty-content');
     loadResult.textContent = '查看日志输出';
@@ -29,12 +40,9 @@ function resetDisplay() {
 }
 
 // 显示错误信息
-function showError(message) {
-    verifyResult.textContent = message;
-    verifyResult.classList.add('empty-content');
-
-    loadResult.textContent = message;
-    loadResult.classList.add('empty-content');
+function showError(message,place) {
+    place.textContent = message;
+    place.classList.add('empty-content');
 }
 
 // 监听框架类型变化
@@ -49,6 +57,7 @@ frameworkRadios.forEach(radio => {
 
 window.dependencyVerify = async function() {
     console.log('dependencyVerify');
+    clearTimer();
     // 显示正在启动服务的提示
     verifyResult.innerHTML = `
     <div style="padding: 20px; text-align: center;">
@@ -113,7 +122,7 @@ window.dependencyVerify = async function() {
                 console.error('获取日志失败:', error);
             }
             
-            setTimeout(fetchLog, 5000); // 每5秒获取一次
+            fetchLogTimer = setTimeout(fetchLog, 5000);
         };
         
         fetchLog(); // 开始获取日志
@@ -129,6 +138,7 @@ window.dependencyVerify = async function() {
 
 window.dependencyLoad = async function() {
     console.log('dependencyLoad');
+    clearTimer();
     // 显示正在启动服务的提示
     loadResult.innerHTML = `
     <div style="padding: 20px; text-align: center;">
@@ -193,7 +203,7 @@ window.dependencyLoad = async function() {
                 console.error('获取日志失败:', error);
             }
             
-            setTimeout(fetchLog, 5000); // 每5秒获取一次
+            fetchLogTimer = setTimeout(fetchLog, 5000); // 存储定时器引用
         };
         
         fetchLog(); // 开始获取日志

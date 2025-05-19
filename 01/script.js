@@ -62,8 +62,10 @@ function resetDisplay() {
     modelDisplay.textContent = '点击"模型解析"按钮查看模型结构图';
     logOutput.classList.add('empty-content');
     logOutput.textContent = '点击"模型解析"按钮查看日志输出';
-    selectedFiles.opset_version == 14;
-    selectedFiles.export_param == true;
+    selectedFiles.opset_version = 14;
+    selectedFiles.export_param = true;
+    modelPathInput.value = '';
+    exportPathInput.value = '';
 }
 
 // 显示错误信息
@@ -192,7 +194,6 @@ window.selectFolder = async function() {
 };
 
 window.parseModelFunction = async function() {
-    resetDisplay();
     console.log('parseModelFunction');
     try {
         const randomId = getRandomId();
@@ -271,8 +272,17 @@ window.parseModelFunction = async function() {
         `;
         
         const endTime = Date.now() + 0.3 * 60 * 1000;
+        let fetchLogTimer = null; // 用于存储定时器引用
+        let isFetchingLog = false; // 标记是否正在获取日志
+        
         const fetchLog = async () => {
-            if (Date.now() > endTime) return;
+            if (!isFetchingLog) return;
+            
+            const endTime = Date.now() + 0.3 * 60 * 1000;
+            if (Date.now() > endTime) {
+                isFetchingLog = false;
+                return;
+            }
             
             const logPath = window.parent.electron.joinPath('logs', `${randomId}.log`);
             try {
@@ -283,9 +293,33 @@ window.parseModelFunction = async function() {
                 console.error('获取日志失败:', error);
             }
             
-            setTimeout(fetchLog, 5000); // 每5秒获取一次
+            fetchLogTimer = setTimeout(fetchLog, 5000); // 每5秒获取一次
         };
         
+        // 监听框架类型变化
+        document.querySelectorAll('input[name="framework"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                // 停止当前的日志获取
+                if (fetchLogTimer) {
+                    clearTimeout(fetchLogTimer);
+                    fetchLogTimer = null;
+                    isFetchingLog = false;
+                }
+                const selectedFramework = e.target.value;
+                const defaultShape = frameworkInputShapes[selectedFramework];
+                inputShapeSelect.value = defaultShape;
+                exportParamSelect.value = 'true';
+                updateOperatorVersions(selectedFramework);
+                resetDisplay();
+                
+                // 更新selectedFile的framework属性
+                if (selectedFiles) {
+                    selectedFiles.framework = selectedFramework;
+                }
+            });
+        });
+        
+        isFetchingLog = true;
         fetchLog(); // 开始获取日志
         
     } catch (error) {
